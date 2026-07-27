@@ -1,0 +1,10 @@
+name: example_echo
+version: 0.1.0
+author: "signalhub"
+description: "Didactic Capability that echoes recent Signals (read-only)."
+signalhub_version: ">=0.2.0"
+permissions:
+  - none
+capabilities:
+  - module: example_echo.capability
+    class: ExampleEchoCapability

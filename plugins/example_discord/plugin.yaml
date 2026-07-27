@@ -1,0 +1,10 @@
+name: example_discord
+version: 0.1.0
+author: "signalhub"
+description: "Didactic Discord Notification Adapter (outbound only)."
+signalhub_version: ">=0.2.0"
+permissions:
+  - notify
+adapters:
+  - module: example_discord.adapter
+    class: ExampleDiscordAdapter

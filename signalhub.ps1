@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
   SignalHub — menu local (bot legado, engine, web qualify).
@@ -123,7 +123,7 @@ switch ($Modo) {
     "web" { Start-Web }
     "tudo" {
         Sync-Env
-        Start-Process powershell -ArgumentList "-NoExit", "-Command", "Set-Location '$Root'; .\INICIAR.ps1 -Modo bot"
+        Start-Process powershell -ArgumentList "-NoExit", "-Command", "Set-Location '$Root'; .\signalhub.ps1 -Modo bot"
         Start-Web
     }
     "menu" { Show-Menu }

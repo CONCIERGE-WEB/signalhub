@@ -1,0 +1,13 @@
+# SignalHub plugin manifest — Cliente Zero #2 (Dork Engine)
+name: dork_signals
+version: 0.1.0
+author: "SignalHub Cliente Zero"
+description: >
+  Second production-path plugin: Dork Engine as SDK extension (not Core).
+  Rate-limit and parsing isolated here. Empty until lawful discovery is wired.
+signalhub_version: ">=0.3.0"
+permissions:
+  - none
+providers:
+  - module: dork_signals.provider
+    class: DorkSignalsProvider

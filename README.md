@@ -1,4 +1,4 @@
-# SignalHub
+﻿# SignalHub
 
 **Robô inteligente de captação em dados públicos · Alertas no Telegram · Qualificação assistida**
 
@@ -36,6 +36,8 @@ Não é advocacia, não emite parecer jurídico e não substitui profissional ha
 |--------|--------|
 | **Bot** | Monitoramento de fontes públicas, classificação e alerta no Telegram |
 | **Engine** | Motor multi-contexto (regras, palavras-chave, varredura configurável) |
+| **OS Core** | Pacote `signalhub/` — Core + Providers + Capabilities; interfaces MCP / REST / CLI. Ver `docs/ARQUITETURA_OS.md` |
+| **Providers (legado)** | `engine/providers/` — Scout scaffold; migração gradual para `signalhub/providers/` |
 | **Web** | Qualificação assistida de contatos (IA + banco + notificação) |
 
 ---
@@ -68,8 +70,8 @@ Python (bot e motor) · Next.js (web) · IA (classificação) · Telegram (alert
 
 ```powershell
 copy .env.example .env
-.\INICIAR.ps1 -Instalar
-.\INICIAR.ps1
+.\signalhub.ps1 -Instalar
+.\signalhub.ps1
 ```
 
 Credenciais mestras na raiz (`.env`); sincronização: `scripts/sincronizar-env.ps1`.
