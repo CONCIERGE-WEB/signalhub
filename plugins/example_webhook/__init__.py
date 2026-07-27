@@ -1,0 +1,1 @@
+"""Example webhook consumer."""

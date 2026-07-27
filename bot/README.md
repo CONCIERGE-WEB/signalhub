@@ -1,4 +1,4 @@
-# SignalHub — Bot
+﻿# SignalHub — Bot
 
 Módulo de monitoramento de **fontes públicas**, classificação com IA e **alerta no Telegram** para aprovação manual.
 
@@ -8,7 +8,7 @@ Módulo de monitoramento de **fontes públicas**, classificação com IA e **ale
 # Preferivel: pela raiz do monorepo
 cd ..
 .\scripts\sincronizar-env.ps1
-.\INICIAR.ps1 -Modo bot
+.\signalhub.ps1 -Modo bot
 ```
 
 Ou isolado:

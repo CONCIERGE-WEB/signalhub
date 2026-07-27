@@ -1,0 +1,10 @@
+name: example_webhook
+version: 0.1.0
+author: "signalhub"
+description: "Didactic webhook Consumer — sinks Signals without touching Core."
+signalhub_version: ">=0.2.0"
+permissions:
+  - network
+consumers:
+  - module: example_webhook.consumer
+    class: ExampleWebhookConsumer

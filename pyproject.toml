@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "signalhub"
+version = "0.4.0"
+description = "SignalHub — deterministic signal-processing framework + developer platform (no LLM in Core)"
+readme = "signalhub/README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary — SignalHub Business License" }
+authors = [{ name = "Tiago Aureliano da Rocha" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+signalhub = "signalhub.apps.cli:main"
+signalhub-mcp = "signalhub.apps.mcp.server:run_stdio_server"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["signalhub*"]
+
+[tool.pytest.ini_options]
+testpaths = ["signalhub/tests", "engine/providers/tests"]
+pythonpath = ["."]

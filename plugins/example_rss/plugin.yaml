@@ -1,0 +1,11 @@
+# SignalHub plugin manifest
+name: example_rss
+version: 0.1.0
+author: "signalhub"
+description: "Didactic RSS/public-feed Provider scaffold (framework extension, not Core scraping)."
+signalhub_version: ">=0.2.0"
+permissions:
+  - network
+providers:
+  - module: example_rss.provider
+    class: ExampleRssProvider
