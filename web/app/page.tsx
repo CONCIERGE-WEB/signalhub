@@ -1,227 +1,220 @@
-"use client";
+import Link from "next/link";
 
-import Image from "next/image";
-import { useState, type FormEvent } from "react";
+import { PipelineRiver } from "@/components/signal/pipeline-river";
+import { SiteFooter, SiteHeader } from "@/components/layout/site-chrome";
+import { LinkButton } from "@/components/ui/button";
+import { Card } from "@/components/ui/cards";
 
-const MARCA = "Vortexia";
-const TITULAR = "Tiago Aureliano da Rocha";
-const CNPJ = "61.699.939/0001-80";
+const SURFACES = [
+  { title: "REST", href: "/rest", body: "HTTP canônico sobre Capabilities." },
+  { title: "CLI", href: "/docs", body: "doctor · validate · contract-check." },
+  { title: "MCP", href: "/mcp", body: "Tools projetadas sem scraping no servidor." },
+  { title: "Dashboard", href: "/dashboard", body: "Janela para o protocolo." },
+  { title: "Telegram", href: "/examples", body: "Adapter de notificação outbound." },
+  { title: "Plugins", href: "/plugins", body: "Loader + version negotiation." },
+];
 
-const inputClass =
-  "w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition";
+const FAQ = [
+  {
+    q: "O Core usa IA?",
+    a: "Não. Score e regras são determinísticos. IA, se existir, fica em consumers fora do Core.",
+  },
+  {
+    q: "O que é um Signal?",
+    a: "A unidade canônica do protocolo (RFC-0001): evidência pública normalizada e auditável.",
+  },
+  {
+    q: "Como estendo o SignalHub?",
+    a: "Via Plugin SDK. Providers não entram no Core — passam por validate e doctor.",
+  },
+  {
+    q: "Scout e Dork estão prontos?",
+    a: "Existem como plugins Cliente Zero (scaffold). Coleta real é fase posterior ao Core 1.0 LOCKED.",
+  },
+];
 
-export default function Home() {
-  const [form, setForm] = useState({
-    nome_ou_razao: "",
-    email: "",
-    telefone: "",
-    mensagem: "",
-    website: "",
-  });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [erro, setErro] = useState("");
-
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }
-
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setErro("");
-
-    if (!form.nome_ou_razao.trim() || !form.email.trim() || !form.mensagem.trim()) {
-      setErro("Preencha nome ou razão social, e-mail e mensagem.");
-      return;
-    }
-
-    setStatus("loading");
-
-    try {
-      const res = await fetch("/api/qualify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, source: "landing" }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setErro(data.error ?? "Erro inesperado. Tente novamente.");
-        setStatus("error");
-        return;
-      }
-
-      setStatus("success");
-    } catch {
-      setErro("Falha de conexão. Verifique sua internet e tente novamente.");
-      setStatus("error");
-    }
-  }
-
+export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-white flex flex-col">
-      <header className="border-b border-gray-100 px-6 py-4">
-        <div className="flex items-center gap-3">
-          <Image
-            src="/brand/logo-mark.svg"
-            alt=""
-            width={32}
-            height={32}
-            priority
-            className="shrink-0"
-          />
-          <div className="leading-tight">
-            <span className="text-sm font-semibold text-gray-900 tracking-wide">{MARCA}</span>
-            <p className="text-[10px] text-gray-400 uppercase tracking-widest">
-              Inteligência de negócios
-            </p>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-void">
+      <div className="pointer-events-none fixed inset-0 bg-aurora" />
+      <div className="pointer-events-none fixed inset-0 bg-grid opacity-[0.35] dark:opacity-20" />
+      <SiteHeader />
 
-      <section className="flex-1 flex items-center justify-center px-6 py-20">
-        <div className="w-full max-w-lg">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mb-4">
-            Inteligência de negócios
+      <main className="relative">
+        <section className="mx-auto max-w-6xl px-4 pb-16 pt-16 md:pt-24">
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal">
+            Signal Contract 1.0 · Core LOCKED
           </p>
-
-          <h1 className="text-3xl font-semibold text-gray-900 leading-tight mb-3">
-            Descreva o desafio que você ou sua empresa está tentando resolver
+          <h1 className="mt-4 max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-balance md:text-6xl">
+            Build on Signals, not assumptions.
           </h1>
-
-          <p className="text-gray-500 text-base mb-10">
-            Nossa equipe analisa cada demanda individualmente e entra em contato com as
-            possibilidades disponíveis.
+          <p className="mt-5 max-w-2xl text-lg text-mute">
+            Construa sobre sinais, não sobre suposições. Protocolo determinístico para evidências
+            públicas — REST, CLI, MCP e Dashboard falam a mesma língua: o Signal.
           </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <LinkButton href="/mission-control" size="lg">
+              Mission Control
+            </LinkButton>
+            <LinkButton href="/playground" variant="secondary" size="lg">
+              Get Started
+            </LinkButton>
+            <LinkButton href="/docs" variant="outline" size="lg">
+              Documentation
+            </LinkButton>
+            <LinkButton
+              href="https://github.com/TiagoIA-UX/signalhub"
+              variant="ghost"
+              size="lg"
+            >
+              GitHub
+            </LinkButton>
+          </div>
 
-          {status === "success" ? (
-            <div className="rounded-xl border border-gray-100 bg-gray-50 p-8 text-center">
-              <p className="text-2xl mb-2" aria-hidden="true">
-                ✓
-              </p>
-              <p className="font-medium text-gray-900 mb-1">Mensagem recebida</p>
-              <p className="text-sm text-gray-500">
-                Entraremos em contato em até 1 dia útil.
-              </p>
+          <div className="mt-10 overflow-hidden rounded-xl border border-line bg-ink">
+            <div className="flex items-center gap-2 border-b border-line px-4 py-2">
+              <span className="size-2 rounded-full bg-fault/80" />
+              <span className="size-2 rounded-full bg-warn/80" />
+              <span className="size-2 rounded-full bg-valid/80" />
+              <span className="ml-2 font-mono text-[10px] text-mute">install</span>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-              <div
-                className="absolute opacity-0 pointer-events-none h-0 overflow-hidden"
-                aria-hidden="true"
-              >
-                <label htmlFor="website">Website</label>
-                <input
-                  id="website"
-                  type="text"
-                  name="website"
-                  value={form.website}
-                  onChange={handleChange}
-                  tabIndex={-1}
-                  autoComplete="off"
-                />
-              </div>
+            <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-fog md:text-sm">
+{`pip install -e .
+python -m signalhub.apps.cli doctor --full
+python -m signalhub.apps.cli admin-snapshot`}
+            </pre>
+          </div>
+        </section>
 
-              <div>
-                <label htmlFor="nome_ou_razao" className="block text-sm font-medium text-gray-700 mb-1">
-                  Nome ou razão social{" "}
-                  <span className="text-gray-400 font-normal">(obrigatório)</span>
-                </label>
-                <input
-                  id="nome_ou_razao"
-                  type="text"
-                  name="nome_ou_razao"
-                  value={form.nome_ou_razao}
-                  onChange={handleChange}
-                  placeholder="João Silva ou Empresa Exemplo Ltda"
-                  className={inputClass}
-                  required
-                />
-              </div>
+        <section className="mx-auto max-w-6xl px-4 py-12">
+          <h2 className="font-display text-2xl font-semibold">Signal Contract</h2>
+          <p className="mt-2 max-w-2xl text-mute">
+            Tudo no SignalHub produz ou consome Signals. Todo componente existe para manipular
+            Signals. O contrato é a linguagem comum da plataforma.
+          </p>
+          <div className="mt-6 grid gap-3 md:grid-cols-3">
+            {["Canonical object", "Lifecycle & states", "Validation · Priority · Provenance"].map(
+              (t) => (
+                <Card key={t}>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-signal">rfc-0001</p>
+                  <p className="mt-2 text-sm text-fog">{t}</p>
+                </Card>
+              ),
+            )}
+          </div>
+        </section>
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  E-mail{" "}
-                  <span className="text-gray-400 font-normal">(obrigatório)</span>
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="contato@email.com"
-                  className={inputClass}
-                  required
-                />
-              </div>
+        <section className="mx-auto max-w-6xl px-4 py-12">
+          <h2 className="mb-4 font-display text-2xl font-semibold">Pipeline</h2>
+          <PipelineRiver />
+        </section>
 
-              <div>
-                <label htmlFor="telefone" className="block text-sm font-medium text-gray-700 mb-1">
-                  Telefone{" "}
-                  <span className="text-gray-400 font-normal">(opcional)</span>
-                </label>
-                <input
-                  id="telefone"
-                  type="tel"
-                  name="telefone"
-                  value={form.telefone}
-                  onChange={handleChange}
-                  placeholder="(11) 9 0000-0000"
-                  className={inputClass}
-                />
-              </div>
+        <section className="mx-auto max-w-6xl px-4 py-12">
+          <h2 className="font-display text-2xl font-semibold">Como funciona</h2>
+          <ol className="mt-6 grid gap-3 md:grid-cols-3">
+            {[
+              "Provider descobre RawHits públicos (plugin).",
+              "Core valida, normaliza, deduplica, aplica regras e score.",
+              "Capabilities expõem o resultado em REST / MCP / CLI.",
+            ].map((step, i) => (
+              <Card key={step}>
+                <p className="font-mono text-[10px] text-mute">{String(i + 1).padStart(2, "0")}</p>
+                <p className="mt-2 text-sm text-fog">{step}</p>
+              </Card>
+            ))}
+          </ol>
+        </section>
 
-              <div>
-                <label htmlFor="mensagem" className="block text-sm font-medium text-gray-700 mb-1">
-                  Descreva o desafio{" "}
-                  <span className="text-gray-400 font-normal">(obrigatório)</span>
-                </label>
-                <textarea
-                  id="mensagem"
-                  name="mensagem"
-                  value={form.mensagem}
-                  onChange={handleChange}
-                  placeholder="Ex.: preciso resolver um problema recorrente com clientes e não sei por onde começar..."
-                  rows={5}
-                  className={`${inputClass} resize-none`}
-                  required
-                />
-              </div>
+        <section className="mx-auto max-w-6xl px-4 py-12">
+          <h2 className="font-display text-2xl font-semibold">Arquitetura</h2>
+          <p className="mt-2 max-w-2xl text-sm text-mute">
+            Apps → Adapter/projection → Core (Orchestrator + Pipeline) → Plugin SDK → plugins/*.
+            O Lex Rocha e outros consumidores não duplicam regras.
+          </p>
+          <pre className="mt-6 overflow-x-auto rounded-xl border border-line bg-ink p-4 font-mono text-[11px] leading-relaxed text-mute">
+{`Apps: REST · CLI · MCP · Dashboard · Telegram
+              │
+         SignalHub Core 1.0 (LOCKED)
+              │
+         Plugin Loader + Version Negotiation
+              │
+     Scout · Dork · Google  (scaffolds / empty explicit)`}
+          </pre>
+        </section>
 
-              {erro && (
-                <p className="text-sm text-red-600" role="alert">
-                  {erro}
-                </p>
-              )}
+        <section className="mx-auto max-w-6xl px-4 py-12">
+          <h2 className="font-display text-2xl font-semibold">Superfícies</h2>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {SURFACES.map((s) => (
+              <Link key={s.title} href={s.href} className="block transition hover:-translate-y-0.5">
+                <Card className="h-full hover:border-signal/40">
+                  <h3 className="font-display font-semibold">{s.title}</h3>
+                  <p className="mt-2 text-sm text-mute">{s.body}</p>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
 
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                className="w-full bg-gray-900 text-white rounded-lg py-3 text-sm font-medium hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
-              >
-                {status === "loading" ? "Enviando..." : "Enviar mensagem"}
-              </button>
+        <section className="mx-auto max-w-6xl px-4 py-12">
+          <h2 className="font-display text-2xl font-semibold">Developer Experience</h2>
+          <p className="mt-2 max-w-2xl text-mute">
+            create → validate → doctor → contract-check. Um provider funcional em minutos — sem
+            porta dos fundos no Core.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <LinkButton href="/examples" variant="secondary">
+              Examples
+            </LinkButton>
+            <LinkButton href="/explorer" variant="outline">
+              Capability Explorer
+            </LinkButton>
+            <LinkButton href="/changelog" variant="ghost">
+              Changelog
+            </LinkButton>
+          </div>
+        </section>
 
-              <p className="text-xs text-gray-400 text-center">
-                Seus dados são tratados conforme a LGPD. Não compartilhamos informações com
-                terceiros.
-              </p>
-            </form>
-          )}
-        </div>
-      </section>
+        <section className="mx-auto max-w-6xl px-4 py-12">
+          <h2 className="font-display text-2xl font-semibold">Open Specification</h2>
+          <p className="mt-2 text-mute">
+            RFC-0001 Signal Specification está estável. RFCs de Provider, Capability, Adapter e
+            Score virão sem quebrar o contrato.
+          </p>
+          <LinkButton href="/rfc" className="mt-6" variant="secondary">
+            Ver RFCs
+          </LinkButton>
+        </section>
 
-      <footer className="border-t border-gray-100 px-6 py-6 text-center space-y-1">
-        <p className="text-xs text-gray-500">
-          © {new Date().getFullYear()} {MARCA} · {TITULAR} · CNPJ {CNPJ} · Caraguatatuba/SP
-        </p>
-        <p className="text-xs text-gray-400">
-          Qualificação de demandas comerciais e apoio à prospecção.
-        </p>
-      </footer>
-    </main>
+        <section className="mx-auto max-w-6xl px-4 py-12">
+          <h2 className="font-display text-2xl font-semibold">FAQ</h2>
+          <div className="mt-6 space-y-3">
+            {FAQ.map((item) => (
+              <Card key={item.q}>
+                <h3 className="font-medium text-fog">{item.q}</h3>
+                <p className="mt-2 text-sm text-mute">{item.a}</p>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 py-20 text-center">
+          <h2 className="font-display text-3xl font-semibold">Pronto para construir sobre Signals?</h2>
+          <p className="mx-auto mt-3 max-w-xl text-mute">
+            O Core está travado. A evolução agora é DX, plugins e consumidores — pela janela Web.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <LinkButton href="/playground" size="lg">
+              Abrir Playground
+            </LinkButton>
+            <LinkButton href="/docs" variant="secondary" size="lg">
+              Ler a spec
+            </LinkButton>
+          </div>
+        </section>
+      </main>
+
+      <SiteFooter />
+    </div>
   );
 }

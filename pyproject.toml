@@ -23,6 +23,10 @@ signalhub-mcp = "signalhub.apps.mcp.server:run_stdio_server"
 where = ["."]
 include = ["signalhub*"]
 
+[tool.vercel]
+# Core REST (WSGI) — Lex Rocha / integradores via Adapter HTTP.
+entrypoint = "signalhub.apps.api:app"
+
 [tool.pytest.ini_options]
 testpaths = ["signalhub/tests", "engine/providers/tests"]
 pythonpath = ["."]

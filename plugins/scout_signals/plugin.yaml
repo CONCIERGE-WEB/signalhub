@@ -6,6 +6,7 @@ description: >
   First production-path plugin: Scout as SDK extension (not Core).
   Built via create → validate → doctor. Empty until lawful discovery is wired.
 signalhub_version: ">=0.3.0"
+contract_version: "1.0.0"
 permissions:
   - none
 providers:

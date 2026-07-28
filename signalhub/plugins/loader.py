@@ -10,6 +10,7 @@ from typing import Any, Sequence
 
 from signalhub.core.registry.container import ServiceContainer
 from signalhub.plugins.manifest import PluginManifest, load_manifest, validate_manifest
+from signalhub.plugins.version_negotiation import negotiate_plugin_versions
 from signalhub.sdk.adapter import NotificationAdapterPort
 from signalhub.sdk.capability import CapabilityPlugin
 from signalhub.sdk.consumer import SignalConsumer
@@ -99,8 +100,15 @@ class PluginLoader:
                 errors=[f"manifest: {exc}"],
             )
         issues = validate_manifest(manifest)
+        issues.extend(
+            negotiate_plugin_versions(
+                signalhub_version=manifest.signalhub_version,
+                contract_version=manifest.contract_version,
+            )
+        )
         loaded = LoadedPlugin(manifest=manifest, errors=list(issues))
         if issues:
+            # Incompatível: não importa providers (não contaminar o registry).
             return loaded
 
         # Make plugin dir importable

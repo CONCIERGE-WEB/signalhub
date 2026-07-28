@@ -1,27 +1,41 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { IBM_Plex_Mono, Outfit, Syne } from "next/font/google";
+
+import { Providers } from "@/components/layout/providers";
+
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const sans = Outfit({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
-export const metadata: Metadata = {
-  title: "Vortexia — Inteligência de negócios",
+const display = Syne({
+  subsets: ["latin"],
+  variable: "--font-display",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+});
+
+export const metadata = {
+  title: {
+    default: "SignalHub — Build on Signals, not assumptions",
+    template: "%s · SignalHub",
+  },
   description:
-    "Qualificação de demandas comerciais para empresas e profissionais brasileiros.",
-  robots: {
-    index: false,
-    follow: false,
-  },
-  icons: {
-    icon: [{ url: "/brand/icon.png", type: "image/png" }],
-    apple: [{ url: "/brand/icon.png", type: "image/png" }],
-  },
+    "Plataforma determinística de sinais públicos. Signal Contract 1.0, Capabilities, MCP, REST e Plugin SDK — sem IA no Core.",
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
-      <body className={inter.className}>{children}</body>
+    <html lang="pt-BR" suppressHydrationWarning className="dark">
+      <body className={`${sans.variable} ${display.variable} ${mono.variable} font-sans`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

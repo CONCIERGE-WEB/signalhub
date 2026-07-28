@@ -1,0 +1,15 @@
+# SignalHub lab plugin — NEVER remove. Synthetic signals only. No real discovery.
+name: debug_signals
+version: 1.0.0
+author: "SignalHub Lab"
+description: >
+  Permanent laboratory provider. Generates synthetic Signals for end-to-end
+  validation (Validator, Rules, Score, Dashboard, REST, MCP, Telegram).
+  No Scout/Dork/Google. No internet.
+signalhub_version: ">=0.4.0"
+contract_version: "1.0.0"
+permissions:
+  - none
+providers:
+  - module: debug_signals.provider
+    class: DebugSignalsProvider

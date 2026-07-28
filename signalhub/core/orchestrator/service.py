@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from typing import Any, Mapping, Sequence
 
 from signalhub.core.contracts.capability import CapabilityResult
@@ -19,6 +20,7 @@ from signalhub.core.pipeline.stages import (
 from signalhub.core.registry.capabilities import CapabilityRegistry
 from signalhub.core.registry.providers import ProviderRegistry
 from signalhub.notifications import TelegramNotificationAdapter
+from signalhub.observability.metrics import platform_metrics
 from signalhub.observability.tracing import ExecutionTrace
 from signalhub.scoring import ScoreEngine
 from signalhub.security.policy import SecurityPolicy
@@ -121,11 +123,16 @@ class Orchestrator:
                     )
                 )
                 continue
+            t0 = time.perf_counter()
             hits = provider.search(query)
             collected = provider.collect(hits)
             normalized = provider.normalize(collected)
             validated = provider.validate(normalized)
             enriched = provider.enrich(validated)
+            platform_metrics().timing(
+                f"provider_latency_ms:{pid}",
+                (time.perf_counter() - t0) * 1000,
+            )
             signals.extend(enriched)
 
         ctx = PipelineContext(capability_id=capability_id, signals=signals)

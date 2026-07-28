@@ -2,6 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply antialiased text-gray-900 bg-white;
+:root {
+  --sh-void: #f3f5f8;
+  --sh-ink: #ffffff;
+  --sh-panel: #eef2f7;
+  --sh-line: #d5dce7;
+  --sh-fog: #10141c;
+  --sh-mute: #5b6678;
+  --sh-signal: #3b6ef5;
+  --sh-valid: #0f9f6e;
+  --sh-warn: #b7791f;
+  --sh-fault: #d64545;
+}
+
+.dark {
+  --sh-void: #06080c;
+  --sh-ink: #0b0f15;
+  --sh-panel: #111722;
+  --sh-line: #1d2633;
+  --sh-fog: #e8edf5;
+  --sh-mute: #8b97a8;
+  --sh-signal: #5b8cff;
+  --sh-valid: #3ecf8e;
+  --sh-warn: #e0a23a;
+  --sh-fault: #ef5f5f;
+}
+
+@layer base {
+  * {
+    @apply border-line;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-void text-fog antialiased;
+    background-image: var(--tw-gradient-from, none);
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--sh-signal) 35%, transparent);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }

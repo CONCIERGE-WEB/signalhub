@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import time
+
 from signalhub.core.contracts.pipeline import PipelineContext, PipelineStage
 from signalhub.core.models import ProcessingStep
 from signalhub.core.models.signal import SignalStatus
+from signalhub.observability.metrics import platform_metrics
 from signalhub.scoring import ScoreEngine
 from signalhub.storage import InMemorySignalStore
 from signalhub.validation import SignalValidator
@@ -26,6 +29,7 @@ class SignalValidatorStage(PipelineStage):
     def process(self, ctx: PipelineContext) -> PipelineContext:
         accepted = []
         rejected = 0
+        metrics = platform_metrics()
         for signal in ctx.signals:
             result = self.validator.validate(signal)
             if not result.ok:
@@ -44,6 +48,9 @@ class SignalValidatorStage(PipelineStage):
             accepted.append(signal)
         ctx.signals = accepted
         ctx.attributes["validator_rejected"] = rejected
+        if rejected:
+            metrics.incr("signals_invalid", rejected)
+        metrics.incr("signals_produced", len(accepted))
         return ctx
 
 
@@ -74,9 +81,11 @@ class DeduplicatorStage(PipelineStage):
     def process(self, ctx: PipelineContext) -> PipelineContext:
         seen: set[str] = set()
         unique = []
+        dup = 0
         for signal in ctx.signals:
             key = signal.url or str(signal.id)
             if key in seen:
+                dup += 1
                 continue
             seen.add(key)
             signal.transition(
@@ -85,7 +94,12 @@ class DeduplicatorStage(PipelineStage):
                 detail=f"key={key}",
             )
             unique.append(signal)
+        discarded = len(ctx.signals) - len(unique)
         ctx.signals = unique
+        if dup:
+            platform_metrics().incr("signals_duplicated", dup)
+        if discarded:
+            platform_metrics().incr("signals_discarded", discarded)
         return ctx
 
 
@@ -96,7 +110,19 @@ class RuleAndScoreStage(PipelineStage):
         self.score_engine = score_engine or ScoreEngine()
 
     def process(self, ctx: PipelineContext) -> PipelineContext:
-        ctx.signals = [self.score_engine.score(s) for s in ctx.signals]
+        metrics = platform_metrics()
+        out = []
+        for signal in ctx.signals:
+            t0 = time.perf_counter()
+            signal, hits = self.score_engine.rule_engine.apply(signal)
+            metrics.timing("rule_engine_ms", (time.perf_counter() - t0) * 1000)
+            if hits:
+                metrics.incr("rules_applied", len(hits))
+            t1 = time.perf_counter()
+            scored = self.score_engine.apply_hits(signal, hits)
+            metrics.timing("score_engine_ms", (time.perf_counter() - t1) * 1000)
+            out.append(scored)
+        ctx.signals = out
         return ctx
 
 

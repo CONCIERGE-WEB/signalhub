@@ -45,11 +45,30 @@ def main(argv: list[str] | None = None) -> int:
     p_test.add_argument("target", choices=["provider", "plugin"])
     p_test.add_argument("path", help="Plugin directory")
 
-    sub.add_parser("doctor", help="Environment + plugins health")
+    p_doctor = sub.add_parser("doctor", help="Environment + plugins health")
+    p_doctor.add_argument(
+        "--full",
+        action="store_true",
+        help="Validate contract, providers, adapters, capabilities, storage, plugins, MCP, REST, Telegram",
+    )
     sub.add_parser("contract-check", help="RFC-0001 contract check (core + plugins)")
+    sub.add_parser("health", help="Separated health checks (JSON)")
 
     p_plugins = sub.add_parser("plugins", help="List discovered plugins")
     p_plugins.add_argument("--json", action="store_true")
+
+    sub.add_parser("mission-control", help="Lab status board (JSON)")
+
+    p_lab = sub.add_parser("lab", help="Laboratory: generate / export / replay synthetic signals")
+    lab_sub = p_lab.add_subparsers(dest="lab_cmd", required=True)
+    p_gen = lab_sub.add_parser("generate", help="Generate Test Signal via debug provider")
+    p_gen.add_argument("--mode", default="valid", help="valid|invalid|high_score|...")
+    p_gen.add_argument("--limit", type=int, default=1)
+    p_exp = lab_sub.add_parser("export", help="Export stored signals to JSON")
+    p_exp.add_argument("path", nargs="?", default="lab-signals.json")
+    p_exp.add_argument("--limit", type=int, default=100)
+    p_rep = lab_sub.add_parser("replay", help="Replay signals JSON through Core pipeline")
+    p_rep.add_argument("path", help="JSON file from lab export")
 
     args = parser.parse_args(argv)
 
@@ -124,7 +143,15 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "doctor":
         from signalhub.sdk.devtools import doctor
 
-        report = doctor()
+        report = doctor(full=bool(getattr(args, "full", False)))
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0 if report["ok"] else 1
+
+    if args.cmd == "health":
+        from signalhub.bootstrap import build_container
+        from signalhub.platform.health import run_all_health_checks
+
+        report = run_all_health_checks(build_container(load_plugins=True))
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 0 if report["ok"] else 1
 
@@ -159,6 +186,34 @@ def main(argv: list[str] | None = None) -> int:
                 for e in r["errors"]:
                     print(f"  - {e}")
         return 0 if all(r["ok"] for r in rows) else 1
+
+    if args.cmd == "mission-control":
+        from signalhub.lab import mission_control_status
+
+        report = mission_control_status()
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0 if report.get("core", {}).get("ok") else 1
+
+    if args.cmd == "lab":
+        from signalhub.lab import (
+            export_to_path,
+            generate_synthetic,
+            replay_from_path,
+        )
+
+        if args.lab_cmd == "generate":
+            report = generate_synthetic(mode=args.mode, limit=args.limit)
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+            return 0 if report.get("ok") else 1
+        if args.lab_cmd == "export":
+            report = export_to_path(Path(args.path), limit=args.limit)
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+            return 0 if report.get("ok") else 1
+        if args.lab_cmd == "replay":
+            report = replay_from_path(Path(args.path))
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+            return 0 if report.get("ok") else 1
+        return 2
 
     return 2
 

@@ -21,6 +21,7 @@ class PluginManifest:
     author: str = ""
     description: str = ""
     signalhub_version: str = ">=0.2.0"
+    contract_version: str = "1.0.0"
     permissions: Sequence[str] = ()
     providers: Sequence[PluginEntry] = ()
     capabilities: Sequence[PluginEntry] = ()
@@ -39,6 +40,7 @@ class PluginManifest:
             "author": self.author,
             "description": self.description,
             "signalhub_version": self.signalhub_version,
+            "contract_version": self.contract_version,
             "permissions": list(self.permissions),
             "providers": ents(self.providers),
             "capabilities": ents(self.capabilities),
@@ -106,6 +108,7 @@ def _from_mapping(raw: Mapping[str, Any], *, path: Path | None) -> PluginManifes
         author=str(raw.get("author") or ""),
         description=str(raw.get("description") or ""),
         signalhub_version=str(raw.get("signalhub_version") or ">=0.2.0"),
+        contract_version=str(raw.get("contract_version") or "1.0.0"),
         permissions=tuple(raw.get("permissions") or ()),
         providers=entries("providers"),
         capabilities=entries("capabilities"),

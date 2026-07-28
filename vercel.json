@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/index.py": {
+      "excludeFiles": "{bot/**,engine/**,web/**,docs/**,**/*.md,signalhub/tests/**,.pytest_cache/**}"
+    }
+  }
+}
