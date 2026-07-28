@@ -164,7 +164,7 @@ def build_admin_snapshot(
             "p1_scout_dorking_real": False,
             "p2_sdk": True,
             "p2_platform_hardening": True,
-            "client_zero_scout": True,
+            "client_zero_prospector": True,
             "client_zero_dorking": True,
             "capability_explorer": True,
         },

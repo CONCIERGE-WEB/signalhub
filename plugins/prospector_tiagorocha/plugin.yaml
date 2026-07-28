@@ -1,0 +1,14 @@
+# SignalHub plugin manifest — Captação Tiago A. Rocha (SDK extension, not Core)
+name: prospector_tiagorocha
+version: 0.1.0
+author: "Tiago A. Rocha"
+description: >
+  Captação Prospector | Tiago A. Rocha — plugin SDK (não Core).
+  Built via create → validate → doctor. Empty until lawful discovery is wired.
+signalhub_version: ">=0.3.0"
+contract_version: "1.0.0"
+permissions:
+  - none
+providers:
+  - module: prospector_tiagorocha.provider
+    class: ProspectorTiagoRochaProvider

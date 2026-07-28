@@ -129,7 +129,7 @@ Core estável; extensões via `plugins/` + SDK. Marketplace: [`docs/MARKETPLACE.
 
 Scout e Dorking saíram do Core:
 
-- [`plugins/scout_signals`](../plugins/scout_signals)
+- [`plugins/prospector_tiagorocha`](../plugins/prospector_tiagorocha) (Prospector | Tiago A. Rocha; antes `scout_signals`)
 - [`plugins/dork_signals`](../plugins/dork_signals)
 
 Ver [`docs/CLIENT_ZERO.md`](./CLIENT_ZERO.md).

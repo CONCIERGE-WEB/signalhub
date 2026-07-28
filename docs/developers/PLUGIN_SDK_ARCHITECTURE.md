@@ -29,7 +29,7 @@ e o que um autor de plugin deve respeitar.
 └───────────────────────────┬─────────────────────────────┘
                             │ plugin.yaml + loader
 ┌───────────────────────────▼─────────────────────────────┐
-│  plugins/*  (Cliente Zero: scout_signals, dork_signals) │
+│  plugins/*  (Cliente Zero: prospector_tiagorocha, dork_signals) │
 └─────────────────────────────────────────────────────────┘
 ```
 

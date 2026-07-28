@@ -36,7 +36,7 @@ Integradores **devem** consumir o Core via Adapter / REST / MCP / CLI — **não
 | Item | Nota |
 |------|------|
 | Providers scaffold (`google`, `websites`, …) | Stubs; health ok, search vazio explícito |
-| Plugins Cliente Zero (`scout_signals`, `dork_signals`) | Contrato ok; discovery **não** wired |
+| Plugins Cliente Zero (`prospector_tiagorocha`, `dork_signals`) | Contrato ok; discovery **não** wired |
 | `InMemoryMetrics` / platform metrics | Internas; sem Prometheus |
 | Telegram adapter in-process | Formata/filtra; envio Bot API real = experimental |
 | Jobs / recent_executions / logs no snapshot | Reservados |
@@ -73,7 +73,7 @@ Comandos de blindagem:
 python -m signalhub.apps.cli doctor
 python -m signalhub.apps.cli doctor --full
 python -m signalhub.apps.cli contract-check
-python -m signalhub.apps.cli validate plugins/scout_signals
+python -m signalhub.apps.cli validate plugins/prospector_tiagorocha
 ```
 
 ---

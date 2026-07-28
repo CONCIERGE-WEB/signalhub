@@ -1,3 +1,1 @@
-"""Scout moved to plugins/scout_signals (Cliente Zero)."""
-
-__all__: list[str] = []
+"""Scout moved to plugins/prospector_tiagorocha (Prospector | Tiago A. Rocha)."""

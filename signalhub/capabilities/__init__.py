@@ -32,7 +32,7 @@ class DiscoverSignalsHandler(CapabilityHandler):
                 },
                 "required": ["terms"],
             },
-            provider_ids=("scout", "dorking", "google"),
+            provider_ids=("prospector_tiagorocha", "dorking", "google"),
             mcp_tool_name="discover_signals",
         )
 
@@ -298,7 +298,7 @@ class SearchLawTopicsHandler(CapabilityHandler):
                 },
                 "required": ["terms"],
             },
-            provider_ids=("dorking", "scout"),
+            provider_ids=("dorking", "prospector_tiagorocha"),
             mcp_tool_name="search_law_topics",
         )
 

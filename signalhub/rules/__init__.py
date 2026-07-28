@@ -187,7 +187,7 @@ def default_rules() -> list[Rule]:
         ),
         OriginProviderRule(
             provider_weights={
-                "scout": 3.0,
+                "prospector_tiagorocha": 3.0,
                 "dorking": 2.5,
                 "google": 2.0,
                 "websites": 2.0,

@@ -1,19 +1,20 @@
 # Cliente Zero — dogfooding the SignalHub SDK
 
 **Status:** active  
-**Date:** 2026-07-27  
-**Rule:** no Core backdoors
+**Date:** 2026-07-28  
+**Rule:** no Core backdoors  
+**Titularidade:** Tiago A. Rocha
 
 | # | Plugin | provider_id | Role |
 |---|--------|-------------|------|
-| 1 | `plugins/scout_signals` | `scout` | Scout channel |
+| 1 | `plugins/prospector_tiagorocha` | `prospector_tiagorocha` | Prospector \| Tiago A. Rocha |
 | 2 | `plugins/dork_signals` | `dorking` | Dork Engine (public-reference search) |
 
 ---
 
 ## Why
 
-If Scout or Dorking need a private door into Core, the SDK failed.  
+If Prospector or Dorking need a private door into Core, the SDK failed.  
 Cliente Zero proves the opposite: production channels are **plugins**, built like any third party.
 
 ## Path taken (both)
@@ -32,7 +33,7 @@ signalhub create provider <name>
 | Concern | Where it lives |
 |---------|----------------|
 | Signal lifecycle / RFC-0001 | Core |
-| Scout discovery | `scout_signals` plugin |
+| Prospector discovery | `prospector_tiagorocha` plugin |
 | Dork queries, parsing, rate-limit | `dork_signals` plugin |
 | ToS of each public engine | Respective plugin |
 
@@ -47,7 +48,7 @@ signalhub create provider <name>
 ```powershell
 cd C:\01_Projetos\06-SignalHub
 $env:SIGNALHUB_PLUGINS_DIR=(Resolve-Path .\plugins).Path
-python -m signalhub.apps.cli validate plugins\scout_signals
+python -m signalhub.apps.cli validate plugins\prospector_tiagorocha
 python -m signalhub.apps.cli validate plugins\dork_signals
 python -m signalhub.apps.cli doctor
 python -m signalhub.apps.cli plugins

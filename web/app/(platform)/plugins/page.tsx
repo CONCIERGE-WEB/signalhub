@@ -17,7 +17,11 @@ export default async function PluginsPage() {
       />
       <div className="grid gap-3 md:grid-cols-2">
         {[
-          { id: "scout_signals", flag: "client_zero_scout", note: "Scout channel · scaffold" },
+          {
+            id: "prospector_tiagorocha",
+            flag: "client_zero_prospector",
+            note: "Prospector | Tiago A. Rocha · scaffold",
+          },
           { id: "dork_signals", flag: "client_zero_dorking", note: "Dork Engine · scaffold" },
         ].map((p) => (
           <Card key={p.id}>

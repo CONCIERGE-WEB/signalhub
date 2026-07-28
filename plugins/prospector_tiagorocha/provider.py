@@ -6,20 +6,19 @@ from signalhub.core.contracts.provider import HealthStatus, ProviderQuery, RawHi
 from signalhub.sdk import ProviderPlugin
 
 
-class ScoutSignalsProvider(ProviderPlugin):
-    """Cliente Zero — Scout as a plugin (not Core).
+class ProspectorTiagoRochaProvider(ProviderPlugin):
+    """Prospector | Tiago A. Rocha — captação as SDK plugin (not Core).
 
     Built strictly via SDK: create → validate → doctor.
     No Core backdoor. Real discovery wiring stays inside this plugin only,
     under operator config and source ToS. Until wired: empty explicit.
     """
 
-    # Keep id "scout" so Core capabilities that list provider_ids=("scout", …) resolve.
-    provider_id = "scout"
-    provider_name = "Scout Signals"
+    provider_id = "prospector_tiagorocha"
+    provider_name = "Prospector | Tiago A. Rocha"
     version = "0.1.0"
     description = (
-        "Cliente Zero plugin: public-signal discovery via Scout channel. "
+        "Prospector | Tiago A. Rocha: public-signal discovery plugin. "
         "Independent plugin — compliance/ToS/rate-limit live here, not in Core."
     )
     capability_ids = ("discover_signals", "search_companies", "search_law_topics")
@@ -28,10 +27,10 @@ class ScoutSignalsProvider(ProviderPlugin):
         return HealthStatus(
             ok=True,
             provider_id=self.provider_id,
-            detail="plugin_cliente_zero — search not wired (empty explicit)",
+            detail="plugin_prospector_tiagorocha — search not wired (empty explicit)",
         )
 
     def search(self, query: ProviderQuery) -> Sequence[RawHit]:
-        # Cliente Zero dogfood: no invented hits; no Core shortcut.
+        # No invented hits; no Core shortcut.
         _ = query
         return ()
