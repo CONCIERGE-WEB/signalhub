@@ -20,7 +20,7 @@ Allow any developer to create Providers, Capabilities, Adapters, Consumers, and 
 
 ## Non-goals (this phase)
 
-- Real Scout / Dork Engine wiring
+- Real Discovery Engine / Dork Engine wiring
 - LLM features
 - Publishing to a public package index (roadmap)
 

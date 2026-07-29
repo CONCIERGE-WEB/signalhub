@@ -1,6 +1,9 @@
 ﻿# SignalHub
 
-**Robô inteligente de captação em dados públicos · Alertas no Telegram · Qualificação assistida**
+**Build on Signals, not assumptions.**
+
+Plataforma para descoberta, processamento e distribuição de **sinais públicos** —
+determinística, auditável, extensível. Core **sem IA obrigatória**.
 
 [![License: Business](https://img.shields.io/badge/license-Business-blue.svg)](./LICENSE)
 [![Compliance](https://img.shields.io/badge/compliance-dados--publicos-green.svg)](./COMPLIANCE.md)
@@ -13,18 +16,36 @@
 
 ---
 
+## Constituição
+
+Antes de qualquer RFC, guia ou issue: o que o SignalHub **é** (e o que **não** é).
+
+→ **[`docs/SIGNALHUB_SPECIFICATION.md`](./docs/SIGNALHUB_SPECIFICATION.md)**
+
+> O SignalHub não coleta dados. Ele organiza evidências.  
+> O SignalHub não toma decisões. Ele entrega sinais.  
+> O SignalHub não substitui aplicações. Ele conecta aplicações a sinais públicos
+> de forma determinística, auditável e extensível.
+
+**Pergunta de plataforma:** *Como qualquer software pode consumir o SignalHub?*  
+(Lex Rocha é um consumidor — não o único.)
+
+---
+
 ## O que é
 
-O SignalHub é um **robô inteligente** que ajuda a **captar interesse de pessoas na internet** a partir de **informações públicas** — publicações e discussões abertas em que alguém já expressou uma necessidade.
+**Infraestrutura de sinais** (OS Core + Discovery Engine + Source Providers + REST/CLI/MCP/Dashboard).
 
-Ele:
+O produto comercial histórico também opera como **robô de captação** em dados públicos
+(alerta Telegram + painel), sempre com **humano no loop** — o software **não** envia
+mensagens sozinho a desconhecidos. Isso é um *consumer path*, não a definição do Core.
 
-1. **Observa** fontes públicas (conforme configuração do operador)  
-2. **Classifica** o sinal com IA (relevância / urgência)  
-3. **Alerta** o operador no Telegram  
-4. **Opcionalmente** registra e qualifica o contato no painel web  
+Fluxo canônico:
 
-**Sempre com humano no loop:** o software **não** envia mensagens sozinho a desconhecidos. Quem decide contatar — e como — é a pessoa responsável pela operação.
+```text
+Source Providers → Discovery Engine → Core → Signals → REST / MCP / Dashboard / Telegram
+                                                      → qualquer aplicação
+```
 
 Não é advocacia, não emite parecer jurídico e não substitui profissional habilitado.
 
@@ -37,7 +58,10 @@ Não é advocacia, não emite parecer jurídico e não substitui profissional ha
 | **Bot** | Monitoramento de fontes públicas, classificação e alerta no Telegram |
 | **Engine** | Motor multi-contexto (regras, palavras-chave, varredura configurável) |
 | **OS Core** | Pacote `signalhub/` — Core + Providers + Capabilities; interfaces MCP / REST / CLI. Ver `docs/ARQUITETURA_OS.md` |
-| **Providers (legado)** | `engine/providers/` — Scout scaffold; migração gradual para `signalhub/providers/` |
+| **Providers (legado)** | `engine/providers/` — scaffold Discovery; migração gradual para plugins |
+| **Certification** | [`docs/PROVIDER_CERTIFICATION_PROGRAM.md`](./docs/PROVIDER_CERTIFICATION_PROGRAM.md) — Prospector → Dork → Google → GitHub (uma por vez) |
+| **Open Source Compliance** | [`docs/OPEN_SOURCE_COMPLIANCE.md`](./docs/OPEN_SOURCE_COMPLIANCE.md) · [`docs/THIRD_PARTY_COMPONENTS.md`](./docs/THIRD_PARTY_COMPONENTS.md) — Scout (kiryano) = Source Provider MIT |
+| **Specification** | Constituição: [`docs/SIGNALHUB_SPECIFICATION.md`](./docs/SIGNALHUB_SPECIFICATION.md) — identidade do projeto (não é RFC nem README) |
 | **Web** | Qualificação assistida de contatos (IA + banco + notificação) |
 
 ---

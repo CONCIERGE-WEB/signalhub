@@ -8,7 +8,11 @@
 | **Escopo** | Plataforma estável para terceiros — **sem** IA no Core |
 
 Este documento fixa o que integradores (Lex Rocha e futuros) podem tratar como estável
-antes de ligar Providers reais (Scout/Dork Engine).
+antes de ligar Providers reais (Discovery Engine / Dork Engine / Source Providers).
+
+**Constituição do projeto:** [`SIGNALHUB_SPECIFICATION.md`](./SIGNALHUB_SPECIFICATION.md)  
+**Certificação de Providers:** [`PROVIDER_CERTIFICATION_PROGRAM.md`](./PROVIDER_CERTIFICATION_PROGRAM.md)  
+**Open Source Compliance:** [`OPEN_SOURCE_COMPLIANCE.md`](./OPEN_SOURCE_COMPLIANCE.md)
 
 ---
 
@@ -89,4 +93,11 @@ python -m signalhub.apps.cli validate plugins/prospector_tiagorocha
 
 ## 6. Próximo passo (fora desta garantia)
 
-Só após `doctor --full` verde de forma sustentável: ligar Scout / Dork Engine **reais** como plugins, sem alterar o Core.
+Só após `doctor --full` verde de forma sustentável **e** após o processo oficial de
+certificação: ligar Providers **reais** como plugins, sem alterar o Core.
+
+**Milestone canônica:** [`PROVIDER_CERTIFICATION_PROGRAM.md`](./PROVIDER_CERTIFICATION_PROGRAM.md)
+
+- Fila: Discovery Engine (Prospector) → Dork Engine → Google → GitHub → … (**nunca dois ao mesmo tempo**).
+- Discovery Engine ≠ fonte: orquestra Source Providers (TikTok / YouTube / Instagram / Facebook / Scout kiryano / …).
+- Status atual do primeiro alvo: **Pending Certification** até LEVEL 1 completo.

@@ -17,8 +17,10 @@ export type CoreSnapshot = {
     enabled: boolean;
     contract_version?: string;
     health: { ok: boolean; detail: string; latency_ms: number | null };
+    certification?: Record<string, unknown>;
   }>;
   providers_enabled: string[];
+  discovery_engine?: Record<string, unknown>;
   capabilities: Array<{
     id: string;
     name: string;

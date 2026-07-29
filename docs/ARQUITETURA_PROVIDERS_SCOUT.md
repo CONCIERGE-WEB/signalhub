@@ -1,9 +1,15 @@
-# Arquitetura — Scout como Provider no SignalHub
+# Arquitetura — Discovery Engine / Prospector (legado: “Scout”)
+
+> **Nota de naming (2026-07-29):** este arquivo é histórico. O conceito oficial
+> de estratégia é **Discovery Engine** (plugin **Prospector**).  
+> **Scout (kiryano)** = Source Provider de terceiros — ver
+> [`OPEN_SOURCE_COMPLIANCE.md`](./OPEN_SOURCE_COMPLIANCE.md).
 
 **Status:** especificação + scaffold (sem quebrar bot/engine atuais)  
 **Alvo:** `C:\01_Projetos\06-SignalHub` (plataforma comercial)  
 **Fora de escopo nesta etapa:** `09LexRocha-Br/signalhub-br` (Lex CDC / dorks congelados)  
-**Criado:** 2026-07-27
+**Criado:** 2026-07-27  
+**Atualizado naming:** 2026-07-29
 
 ---
 
@@ -132,3 +138,22 @@ A fundação da plataforma (OS) vive em `signalhub/` (Core + MCP/API/CLI). Ver `
 
 `engine/providers/` permanece como scaffold legado até o adapter P1.  
 Contrato canônico: `signalhub.core.contracts.provider.Provider` (`search` / `collect` / `normalize` / `validate` / `enrich` / `healthcheck` / `metadata`).
+
+---
+
+## 10. Decisão — Discovery Engine (não “Scout”) como estratégia (2026-07-29)
+
+**Open Source Compliance:** o nome **Scout** deixa de designar a estratégia da plataforma.
+
+| Nome | Papel |
+|------|--------|
+| **Discovery Engine** | Mecanismo oficial de prospecção (orquestra Source Providers) |
+| **Prospector \| Tiago A. Rocha** | Plugin Cliente Zero (`prospector_tiagorocha`) |
+| **Scout (kiryano)** | Source Provider de terceiros ([kiryano/Scout](https://github.com/kiryano/Scout), MIT) — futuro |
+
+Arquivo histórico: este documento mantém o título legado; a norma vigente é
+[`SIGNALHUB_SPECIFICATION.md`](./SIGNALHUB_SPECIFICATION.md) +
+[`OPEN_SOURCE_COMPLIANCE.md`](./OPEN_SOURCE_COMPLIANCE.md).
+
+**Não** ligar Discovery Engine real nem múltiplas fontes em paralelo. Ordem e checklist:
+[`PROVIDER_CERTIFICATION_PROGRAM.md`](./PROVIDER_CERTIFICATION_PROGRAM.md).

@@ -223,7 +223,7 @@ O **Signal Validator** garante que nenhum Provider (incluindo terceiros futuros)
 | Campos novos | Só opcionais ou em `metadata` sem quebrar leitores 1.0.0 |
 | Remoção de campo | Proibida em 1.x; só em major via novo RFC |
 
-Providers futuros (Scout, Dork Engine, Google, GitHub, Websites, …) **devem** implementar exatamente este contrato. Quebrar o canônico = violação do Core.
+Providers futuros (Discovery Engine, Dork Engine, Google, GitHub, Scout kiryano, Websites, …) **devem** implementar exatamente este contrato. Quebrar o canônico = violação do Core.
 
 ---
 
@@ -247,4 +247,4 @@ Providers futuros (Scout, Dork Engine, Google, GitHub, Websites, …) **devem** 
 2. Modelo e Validator alinhados aos campos e estados.
 3. Pipeline na ordem §8.
 4. Testes cobrindo validação, ciclo de vida e serialização canônica.
-5. **Nenhum** Provider real (Scout/Dork) ligado até este contrato estar verde.
+5. **Nenhum** Provider real (Discovery Engine / Dork / Source Providers) ligado até este contrato estar verde.

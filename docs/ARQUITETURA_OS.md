@@ -3,6 +3,7 @@
 **Status:** fundação P0 (contratos + Core + MCP/API/CLI)  
 **Pacote:** `signalhub/` na raiz de `06-SignalHub`  
 **Criado:** 2026-07-27  
+**Constituição:** [`SIGNALHUB_SPECIFICATION.md`](./SIGNALHUB_SPECIFICATION.md) — leia primeiro  
 **Licença atual:** Business License (proprietário). A visão de MCP open-source é decisão de produto futura — este núcleo está desenhado para eventual extração open-core, sem alterar a licença vigente.
 
 ---
@@ -20,7 +21,7 @@ O SignalHub **não** é scraper, CRM ou “só MCP”.
 | REST | `signalhub/apps/api/` | Mesmo Core |
 | CLI | `signalhub/apps/cli/` | Mesmo Core |
 | Dashboard | `web/` + `apps/dashboard/` | UI; BFF futuro chama Core |
-| Providers | `signalhub/providers/` | Scout, Dorking, Google, … |
+| Providers | `signalhub/providers/` + `plugins/` | Discovery Engine, Dorking, Source Providers, … |
 
 **Nenhuma regra de negócio na camada MCP.**
 
@@ -72,7 +73,7 @@ Event bus in-process (`core/events`) — trocável por broker depois.
 | Fase | Entrega |
 |------|---------|
 | **P0** (este) | Pacote `signalhub/`, contratos, registry, MCP/API/CLI, stubs, testes |
-| **P1** | Ligar Scout/Dorking reais atrás do contrato (feature flag; vazio até então) |
+| **P1** | Ligar Discovery Engine / Dorking reais atrás do contrato (feature flag; vazio até então) |
 | **P2** | Enrichment + scoring + Postgres + AI ports reais |
 | **P3** | Plugins CRM/PDF; dashboard BFF |
 | **P4** | Vectors / knowledge graph; avaliação open-core do pacote MCP |
@@ -117,7 +118,7 @@ Pipeline Core:
 
 `Validator → Normalizer → Deduplicator → Rule Engine → Score Engine → Storage`
 
-Nenhum Provider real (Scout/Dork) deve ser ligado sem respeitar este RFC.
+Nenhum Provider real (Discovery Engine / Dork / Source Providers) deve ser ligado sem respeitar este RFC.
 
 ## 12. P2 — Developer Platform
 
@@ -127,9 +128,21 @@ Core estável; extensões via `plugins/` + SDK. Marketplace: [`docs/MARKETPLACE.
 
 ## 13. Cliente Zero
 
-Scout e Dorking saíram do Core:
+Discovery Engine e Dorking saíram do Core:
 
-- [`plugins/prospector_tiagorocha`](../plugins/prospector_tiagorocha) (Prospector | Tiago A. Rocha; antes `scout_signals`)
+- [`plugins/prospector_tiagorocha`](../plugins/prospector_tiagorocha) (Prospector | Tiago A. Rocha; legado de nome: `scout_signals`)
 - [`plugins/dork_signals`](../plugins/dork_signals)
 
 Ver [`docs/CLIENT_ZERO.md`](./CLIENT_ZERO.md).
+
+## 14. Provider Certification Program (2026-07-29)
+
+Core **LOCKED** para Providers sem certificação.
+
+Documento normativo: [`docs/PROVIDER_CERTIFICATION_PROGRAM.md`](./PROVIDER_CERTIFICATION_PROGRAM.md)
+
+- **Discovery Engine / Prospector** = estratégia de descoberta (orquestra fontes).
+- **Source Providers** = Google Dork, Reddit, Reclame Aqui, GitHub, Websites, Scout (kiryano MIT), TikTok, YouTube, Instagram, Facebook, …
+- Fila Level 1: Prospector → Dork Engine → Google → GitHub (uma por vez).
+- Open Source Compliance: [`OPEN_SOURCE_COMPLIANCE.md`](./OPEN_SOURCE_COMPLIANCE.md).
+- Próxima execução de código: **PHASE 3.1 — First Certified Provider** (só depois do registro documental).

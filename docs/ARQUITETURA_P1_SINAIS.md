@@ -61,5 +61,5 @@ regras aplicadas, score, `history` (`ProcessingStep`).
 
 ## Próximo passo (ainda não iniciado)
 
-Integração **real** Scout / Dork Engine atrás do contrato Provider — feature flag  
+Integração **real** Discovery Engine / Dork Engine atrás do contrato Provider — feature flag  
 `p1_scout_dorking_real=false` até lá.

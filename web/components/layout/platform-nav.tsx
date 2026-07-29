@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 
 const ITEMS = [
   { href: "/mission-control", label: "Mission Control" },
+  { href: "/discovery-engine", label: "Discovery Engine" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/integrity", label: "Integrity" },
   { href: "/metrics", label: "Metrics" },
