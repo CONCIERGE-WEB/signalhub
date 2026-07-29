@@ -1,10 +1,10 @@
-# SignalHub plugin manifest — Cliente Zero #2 (Dork Engine)
+# SignalHub plugin manifest — Discovery Engine (Dorking)
 name: dork_signals
-version: 0.1.0
+version: 1.0.0
 author: "SignalHub Cliente Zero"
 description: >
-  Second production-path plugin: Dork Engine as SDK extension (not Core).
-  Rate-limit and parsing isolated here. Empty until lawful discovery is wired.
+  Discovery Engine: multi-source public discovery via existing Dorking
+  (YAML + DDGS + Reddit/HN/RSS). Emits Signal RFC-0001 only. Not Core.
 signalhub_version: ">=0.3.0"
 contract_version: "1.0.0"
 permissions:

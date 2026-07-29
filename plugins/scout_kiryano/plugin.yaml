@@ -1,0 +1,15 @@
+# SignalHub plugin — Source Provider (terceiros MIT: kiryano/Scout)
+name: scout_kiryano
+version: 0.1.0
+author: "SignalHub (Source Provider: kiryano/Scout MIT)"
+description: >
+  Source Provider adaptado do kiryano/Scout (MIT): scrapers públicos
+  (GitHub, YouTube, Linktree). Emite RawHit/Signal; não inventa contato.
+  Atribuição: third_party/kiryano_scout/. Não altera o Core.
+signalhub_version: ">=0.3.0"
+contract_version: "1.0.0"
+permissions:
+  - none
+providers:
+  - module: scout_kiryano.provider
+    class: ScoutKiryanoProvider

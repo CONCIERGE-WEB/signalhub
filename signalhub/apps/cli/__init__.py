@@ -70,6 +70,39 @@ def main(argv: list[str] | None = None) -> int:
     p_rep = lab_sub.add_parser("replay", help="Replay signals JSON through Core pipeline")
     p_rep.add_argument("path", help="JSON file from lab export")
 
+    # Source Provider: scout_kiryano (kiryano/Scout MIT) — dry-run by default
+    p_scout = sub.add_parser(
+        "scout-kiryano",
+        help="Scout (kiryano) connectors — dry-run preview (no main DB write)",
+    )
+    p_scout.add_argument(
+        "--platform",
+        default="github",
+        choices=["github", "youtube", "linktree"],
+        help="Connector platform",
+    )
+    p_scout.add_argument(
+        "--target",
+        required=True,
+        help="Username / handle (e.g. octocat, @GoogleDevelopers)",
+    )
+    p_scout.add_argument(
+        "--dry-run",
+        action="store_true",
+        default=True,
+        help="Preview only — never persist (default)",
+    )
+    p_scout.add_argument(
+        "--test",
+        action="store_true",
+        help="Alias of --dry-run",
+    )
+    p_scout.add_argument(
+        "--live",
+        action="store_true",
+        help="Allow live scrape path (still no auto-persist in v0.1)",
+    )
+
     args = parser.parse_args(argv)
 
     if args.cmd == "capabilities":
@@ -214,6 +247,31 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(report, ensure_ascii=False, indent=2))
             return 0 if report.get("ok") else 1
         return 2
+
+    if args.cmd == "scout-kiryano":
+        import sys as _sys
+        from pathlib import Path as _Path
+
+        # Ensure plugins/ is importable (repo layout).
+        repo_plugins = _Path(__file__).resolve().parents[3] / "plugins"
+        if str(repo_plugins) not in _sys.path:
+            _sys.path.insert(0, str(repo_plugins))
+
+        from scout_kiryano.runner import run_scrape
+
+        dry = True if args.test else (not bool(getattr(args, "live", False)))
+        if args.dry_run:
+            dry = True
+        report = run_scrape(
+            platform=args.platform,
+            target=args.target,
+            dry_run=dry,
+            include_rejected=True,
+        )
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        if report.get("error") and report["error"] not in ("empty_or_blocked",):
+            return 1 if not report.get("ok") else 0
+        return 0 if report.get("ok") else 1
 
     return 2
 

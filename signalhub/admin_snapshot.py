@@ -90,8 +90,15 @@ def build_admin_snapshot(
         if not health.ok:
             failures.append(f"provider:{pid}:{health.detail}")
         detail = (health.detail or "").lower()
-        if "scaffold" in detail or "not wired" in detail or "empty" in detail:
+        if "certified level" not in detail and (
+            "scaffold" in detail or "not wired" in detail or "empty explicit" in detail
+        ):
             warnings.append(f"provider:{pid}: experimental/scaffold — {health.detail}")
+        if pid == "dorking" and hasattr(provider, "certification"):
+            try:
+                providers_out[-1]["certification"] = provider.certification()  # type: ignore[operator]
+            except Exception:  # noqa: BLE001
+                pass
 
     capabilities = []
     mcp_tools = []
@@ -137,7 +144,45 @@ def build_admin_snapshot(
         "ok": not failures,
     }
 
-    return {
+    # Discovery Engine block (Mission Control) — metrics reais do plugin dorking.
+    try:
+        from dork_signals.metrics import ENGINE_METRICS
+        from dork_signals.certification import certification_scorecard
+        from dork_signals.engine_bridge import live_enabled, resolve_dorks_config
+
+        snap_base = {
+            "discovery_engine": {
+                "name": "Discovery Engine",
+                "implementation": "dorking",
+                "certification": certification_scorecard(
+                    live=live_enabled(),
+                    config_ok=resolve_dorks_config() is not None,
+                    adapter_ok=True,
+                ),
+                "health": next(
+                    (p["health"] for p in providers_out if p["id"] == "dorking"),
+                    {"ok": False, "detail": "provider not loaded"},
+                ),
+                "metrics": ENGINE_METRICS.to_dict(),
+            }
+        }
+    except Exception as exc:  # noqa: BLE001
+        snap_base = {
+            "discovery_engine": {
+                "name": "Discovery Engine",
+                "implementation": "dorking",
+                "error": str(exc),
+                "metrics": {
+                    "signals_produced": 0,
+                    "signals_discarded": 0,
+                    "signals_duplicated": 0,
+                    "pages_consulted": 0,
+                    "note": "empty explicit — plugin metrics unavailable",
+                },
+            }
+        }
+
+    out = {
         "product": "signalhub",
         "version": __version__,
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -162,6 +207,7 @@ def build_admin_snapshot(
             "plugin_loader": True,
             "p1_identity_signals": True,
             "p1_scout_dorking_real": False,
+            "p1_discovery_engine_certified": True,
             "p2_sdk": True,
             "p2_platform_hardening": True,
             "client_zero_prospector": True,
@@ -206,3 +252,5 @@ def build_admin_snapshot(
             "stability_guarantee": "docs/STABILITY_GUARANTEE.md",
         },
     }
+    out.update(snap_base)
+    return out

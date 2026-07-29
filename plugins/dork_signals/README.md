@@ -1,10 +1,15 @@
-# Dork Signals — Cliente Zero #2
+# Discovery Engine (Dorking)
 
-Segundo teste do SDK: Dork Engine fora do Core.
+Plugin ID: `dork_signals` · provider_id: `dorking`
 
-- Provider id: `dorking` (compatível com capabilities)
-- Rate-limit / parsing / ToS de mecanismos públicos: **neste** plugin
-- Até wiring real: `search()` vazio explícito
-- Fluxo: `create` → `validate` → `doctor`
+**Papel oficial:** Discovery Engine certificado do SignalHub (PHASE 3.1).
 
-Ver `docs/CLIENT_ZERO.md`.
+Reutiliza o motor legado (`engine/core/sources/DorkScanner` + YAML de dorks)
+que já cobre Reddit, Reclame Aqui, TikTok/Instagram/Facebook/YouTube/GitHub
+(via `site:`), websites e fóruns indexados.
+
+- Emite **somente Signal** (RFC-0001) — nunca Lead.
+- Sem live: `search()` → vazio explícito.
+- Live: `SIGNALHUB_DORKING_LIVE=1` + `SIGNALHUB_DORKS_CONFIG=path/to/dorks.yaml`.
+
+Ver: `docs/PROVIDER_CERTIFICATION_PROGRAM.md` · `docs/PHASE_3_1_DISCOVERY_ENGINE.md`.

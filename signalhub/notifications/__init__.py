@@ -32,6 +32,7 @@ class SignalNotification:
     url: str | None = None
     signal_id: str | None = None
     status: str | None = None
+    summary: str | None = None
     actions: Sequence[NotificationAction] = ()
     aggregated_count: int = 1
 
@@ -46,6 +47,7 @@ class SignalNotification:
             "category": self.category,
             "priority": self.priority,
             "title": self.title,
+            "summary": self.summary or self.title,
             "url": self.url,
             "signal_id": self.signal_id,
             "status": self.status,
@@ -56,19 +58,23 @@ class SignalNotification:
     def format_text(self) -> str:
         rules = list(self.rules_applied) or list(self.justification)
         rule_lines = [f"✔ {r}" for r in rules[:12]] or ["✔ (sem regras)"]
+        resumo = (self.summary or self.title or "—")[:280]
         lines = [
             f"[SignalHub] Prioridade: {self.priority.upper()}",
+            f"Categoria: {self.category or '—'}",
+            f"Origem: {self.origin}",
             f"Score: {self.score if self.score is not None else '—'}",
             f"Confiança do algoritmo: {self.confidence if self.confidence is not None else '—'}",
             f"Tipo: {self.signal_type}",
             f"Título: {self.title}",
-            f"Origem: {self.origin}",
-            f"Categoria: {self.category or '—'}",
-            "Regras:",
+            f"Resumo: {resumo}",
+            "Rules Applied / Regras:",
             *rule_lines,
+            "Justificativa do Score:",
+            *[f"• {j}" for j in (list(self.justification)[:8] or ["—"])],
         ]
         if self.url:
-            lines.append(f"URL: {self.url}")
+            lines.append(f"Link: {self.url}")
         if self.aggregated_count > 1:
             lines.append(f"Agregado: {self.aggregated_count} sinais similares")
         if self.actions:
@@ -145,6 +151,7 @@ class TelegramNotificationAdapter:
             url=signal.url,
             signal_id=str(signal.id),
             status=signal.status_value,
+            summary=signal.summary or signal.title,
             actions=DEFAULT_ACTIONS,
         )
 

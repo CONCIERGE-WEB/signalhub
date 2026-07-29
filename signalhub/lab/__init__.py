@@ -173,7 +173,7 @@ def mission_control_status() -> dict[str, Any]:
         ok = bool(item.get("ok"))
         return {"status": running if ok else down, "ok": ok, "detail": item.get("detail")}
 
-    return {
+    payload: dict[str, Any] = {
         "product": "signalhub",
         "core": {
             "status": "running" if by.get("core", {}).get("ok") else "down",
@@ -218,3 +218,12 @@ def mission_control_status() -> dict[str, Any]:
             "modes": list(LAB_MODES),
         },
     }
+    try:
+        from signalhub.admin_snapshot import build_admin_snapshot
+
+        de = build_admin_snapshot(container).get("discovery_engine")
+        if de:
+            payload["discovery_engine"] = de
+    except Exception:  # noqa: BLE001
+        pass
+    return payload

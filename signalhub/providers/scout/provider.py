@@ -9,7 +9,8 @@ from __future__ import annotations
 class ScoutProvider:  # noqa: D101
     def __init__(self) -> None:
         raise ImportError(
-            "Scout left the Core. Install/load plugin plugins/prospector_tiagorocha "
+            "Discovery Engine left the Core. Use plugin plugins/prospector_tiagorocha "
             "(Prospector | Tiago A. Rocha / Cliente Zero). "
-            "Do not import signalhub.providers.scout."
+            "Do not import signalhub.providers.scout. "
+            "kiryano/Scout (MIT) is a future Source Provider — not this module."
         )

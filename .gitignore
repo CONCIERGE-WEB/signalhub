@@ -46,3 +46,6 @@ bot/data/*.sqlite
 .vscode/
 .DS_Store
 Thumbs.db
+
+temp/
+
