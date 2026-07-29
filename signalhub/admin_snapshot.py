@@ -253,4 +253,69 @@ def build_admin_snapshot(
         },
     }
     out.update(snap_base)
+
+    # Source Provider scout_kiryano — preview hits (dry-run file; never invent).
+    scout_block: dict[str, Any] = {
+        "name": "Prospecção | Tiago A. Rocha",
+        "provider_id": "scout_kiryano",
+        "role": "source_provider",
+        "license": "MIT",
+        "upstream": "https://github.com/kiryano/Scout",
+        "hits": [],
+        "note": "empty explicit — run Prospecção dry-run (YouTube/redes B2C) to fill data/scout_kiryano_preview.json",
+    }
+    try:
+        from pathlib import Path
+        import json as _json
+
+        preview_path = Path(__file__).resolve().parents[1] / "data" / "scout_kiryano_preview.json"
+        if preview_path.is_file():
+            raw_preview = _json.loads(preview_path.read_text(encoding="utf-8"))
+            hits = raw_preview.get("hits") if isinstance(raw_preview, dict) else None
+            if isinstance(hits, list):
+                # Only pass through real recorded fields — no fill.
+                clean: list[dict[str, Any]] = []
+                for h in hits[:40]:
+                    if not isinstance(h, dict):
+                        continue
+                    url = (h.get("url") or "").strip()
+                    if not url:
+                        continue
+                    clean.append(
+                        {
+                            "title": h.get("title") or url,
+                            "url": url,
+                            "source": h.get("source") or h.get("platform") or "scout_kiryano",
+                            "provider": "scout_kiryano",
+                            "product": "Prospecção | Tiago A. Rocha",
+                            "quality_score": h.get("quality_score"),
+                            "quality_status": h.get("quality_status"),
+                            "contact_ok": h.get("contact_ok"),
+                            "email": h.get("email") or "",
+                            "website": h.get("website") or "",
+                            "categoria_id": h.get("categoria_id"),
+                            "categoria_label": h.get("categoria_label"),
+                            "matched_keywords": h.get("matched_keywords") or [],
+                            "captured_at": h.get("captured_at") or raw_preview.get("generated_at"),
+                            "dry_run": bool(raw_preview.get("dry_run", True)),
+                        }
+                    )
+                scout_block["hits"] = clean
+                scout_block["generated_at"] = raw_preview.get("generated_at")
+                scout_block["dry_run"] = bool(raw_preview.get("dry_run", True))
+                scout_block["note"] = (
+                    f"{len(clean)} hit(s) from preview file - not main DB"
+                    if clean
+                    else "preview file present but no valid hits (empty explicit)"
+                )
+        health_scout = next(
+            (p["health"] for p in providers_out if p["id"] == "scout_kiryano"),
+            {"ok": False, "detail": "provider not loaded"},
+        )
+        scout_block["health"] = health_scout
+    except Exception as exc:  # noqa: BLE001
+        scout_block["error"] = str(exc)
+
+    out["scout_kiryano"] = scout_block
+    out["recent_discovery_hits"] = list(scout_block.get("hits") or [])
     return out

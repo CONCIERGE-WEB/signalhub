@@ -7,7 +7,19 @@ import sys
 from pathlib import Path
 
 
+def _ensure_utf8_stdio() -> None:
+    """Windows cp1252 cannot print arrows/emoji in JSON — force UTF-8 stdout/stderr."""
+    for stream in (sys.stdout, sys.stderr):
+        reconf = getattr(stream, "reconfigure", None)
+        if callable(reconf):
+            try:
+                reconf(encoding="utf-8", errors="replace")
+            except Exception:  # noqa: BLE001 — best-effort on exotic consoles
+                pass
+
+
 def main(argv: list[str] | None = None) -> int:
+    _ensure_utf8_stdio()
     parser = argparse.ArgumentParser(
         prog="signalhub",
         description=(
@@ -70,16 +82,16 @@ def main(argv: list[str] | None = None) -> int:
     p_rep = lab_sub.add_parser("replay", help="Replay signals JSON through Core pipeline")
     p_rep.add_argument("path", help="JSON file from lab export")
 
-    # Source Provider: scout_kiryano (kiryano/Scout MIT) — dry-run by default
+    # Source Provider: Prospecção | Tiago A. Rocha (kiryano/Scout MIT)
     p_scout = sub.add_parser(
         "scout-kiryano",
-        help="Scout (kiryano) connectors — dry-run preview (no main DB write)",
+        help="Prospecção | Tiago A. Rocha — dry-run (9 categorias B2C; sem gravar no DB)",
     )
     p_scout.add_argument(
         "--platform",
-        default="github",
+        default="youtube",
         choices=["github", "youtube", "linktree"],
-        help="Connector platform",
+        help="Connector platform (default youtube — github é barrado pelo gate B2B)",
     )
     p_scout.add_argument(
         "--target",

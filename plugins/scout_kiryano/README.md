@@ -1,29 +1,34 @@
-# scout_kiryano — Source Provider (kiryano/Scout MIT)
+# Prospecção | Tiago A. Rocha (`scout_kiryano`)
 
-Plugin **não-Core**. Atribuição: `third_party/kiryano_scout/`.
+Source Provider MIT (kiryano/Scout) sob Discovery Engine — **B2C only**.
 
-## Conectores (v0.1)
+## 9 categorias oficiais
 
-| Platform | Fonte |
-|----------|--------|
-| `github` | API pública GitHub |
-| `youtube` | HTML público do canal |
-| `linktree` | Linktree / link-in-bio |
+| ID canônico | Label |
+|-------------|--------|
+| `voo_bagagem` | Voo e Bagagem |
+| `negativacao_indevida` | Negativação Indevida |
+| `cobranca_indevida` | Cobrança Indevida |
+| `fraude_bancaria` | Fraudes Bancárias e Golpes |
+| `plano_seguro_negativa` | Plano de Saúde |
+| `produto_defeito_atraso` | Produto com Defeito |
+| `pensao_alimenticia` | Pensão Alimentícia |
+| `guarda_filhos` | Guarda e Convivência |
+| `divorcio` | Divórcio e União Estável |
 
-**Não** incluído de propósito: Instagram/TikTok (CAPTCHA), enrichment que **inventa** e-mail via SMTP/padrão, UI Rich do Scout original.
+Aliases de copy (`plano_saude`, `produto_defeito`, `divorcio_uniao`) resolvem para o ID canônico.
 
-## Dry-run (sem gravar no banco)
+## Gates
+
+- Anti-B2B: advogado / advocacia / escritório / OAB / github / código / dev / repository
+- Família: descarta nomes de menores / CPF exposto
+- Sem inventar e-mail (sem SMTP/padrão)
+
+## Dry-run (YouTube)
 
 ```bash
 pip install -r plugins/scout_kiryano/requirements.txt
-python -m signalhub.apps.cli scout-kiryano --dry-run --platform github --target octocat
+python -m signalhub.apps.cli scout-kiryano --dry-run --platform youtube --target HANDLE
 ```
 
-## Provider ao vivo (pipeline)
-
-```bash
-set SIGNALHUB_SCOUT_KIRYANO_LIVE=1
-# query extras: platform=github ; terms=["usuario"]
-```
-
-Sem a env: lista vazia explícita (não inventa hits).
+GitHub é barrado pelo gate B2B (não serve ao funil consumidor).

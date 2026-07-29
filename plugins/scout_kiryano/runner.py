@@ -1,13 +1,13 @@
-"""Dry-run / live scrape orchestration — no main-DB persistence."""
+"""Dry-run / live scrape — Prospecção | Tiago A. Rocha (sem persistir no DB principal)."""
 
 from __future__ import annotations
 
 import logging
 from typing import Any
 
-from scout_kiryano.adapter import profile_to_raw_hit
+from scout_kiryano.adapter import PRODUCT_NAME, profile_to_raw_hit
 from scout_kiryano.connectors import SUPPORTED, scrape
-from scout_kiryano.quality import evaluate
+from scout_kiryano.quality_gate import evaluate
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,7 @@ def run_scrape(
     """
     report: dict[str, Any] = {
         "ok": True,
+        "product": PRODUCT_NAME,
         "dry_run": bool(dry_run),
         "persisted": False,
         "platform": platform,
@@ -37,8 +38,9 @@ def run_scrape(
         "error": None,
     }
     if dry_run:
-        # Explicit: dry-run never writes to SignalHub main storage.
-        report["note"] = "dry-run — preview only; nothing written to main DB"
+        report["note"] = (
+            f"{PRODUCT_NAME} dry-run — preview only; nothing written to main DB"
+        )
 
     try:
         profile = scrape(platform, target)
@@ -47,7 +49,7 @@ def run_scrape(
         report["error"] = str(exc)
         return report
     except Exception as exc:  # noqa: BLE001 — keep queue/CLI alive
-        logger.warning("scout_kiryano scrape failed: %s", exc)
+        logger.warning("%s scrape failed: %s", PRODUCT_NAME, exc)
         report["ok"] = False
         report["error"] = f"scrape_error:{exc}"
         return report
@@ -63,6 +65,9 @@ def run_scrape(
         "status": gate["status"],
         "score": gate["score"],
         "contact_ok": gate["contact_ok"],
+        "categoria_id": gate.get("categoria_id"),
+        "categoria_label": gate.get("categoria_label"),
+        "matched_keywords": gate.get("matched_keywords") or [],
         "reasons": gate["reasons"],
         "profile": gate["profile"],
     }
@@ -74,9 +79,8 @@ def run_scrape(
             "url": hit.url,
             "snippet": hit.snippet[:240],
             "source": hit.source,
+            "category": hit.category,
             "raw": dict(hit.raw),
         }
-    # Persistence intentionally omitted in dry-run and in v0.1 live path
-    # (operator must wire storage separately — no silent DB write).
     report["persisted"] = False
     return report

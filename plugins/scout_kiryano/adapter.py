@@ -8,9 +8,10 @@ from typing import Any, Mapping
 from signalhub.core.contracts.provider import RawHit
 from signalhub.core.models import Provenance
 
-from scout_kiryano.quality import evaluate
+from scout_kiryano.quality_gate import evaluate
 
 PROVIDER_ID = "scout_kiryano"
+PRODUCT_NAME = "Prospecção | Tiago A. Rocha"
 
 
 def profile_to_raw_hit(
@@ -24,6 +25,10 @@ def profile_to_raw_hit(
         return None
     if gate["status"] == "rejected_empty":
         return None
+    # B2B / privacy / no category never become pipeline hits (even in include_rejected preview
+    # for persistence — preview CLI may still show gate separately).
+    if gate["status"] in ("rejected_b2b", "rejected_privacy") and not include_rejected:
+        return None
 
     p = gate["profile"] or {}
     url = (p.get("profile_url") or "").strip() or None
@@ -34,10 +39,11 @@ def profile_to_raw_hit(
     bio = str(p.get("bio") or "")
     snippet = bio[:800] if bio else f"{p.get('platform', '')} @{p.get('username', '')}"
     platform = str(p.get("platform") or "websites")
-    external_seed = f"{url}|{platform}|{p.get('username', '')}"
+    cat_id = gate.get("categoria_id")
+    external_seed = f"{url}|{platform}|{p.get('username', '')}|{cat_id or ''}"
     external_id = hashlib.sha256(external_seed.encode("utf-8")).hexdigest()[:24]
     content_hash = hashlib.sha256(
-        f"{title}\n{snippet}\n{url}".encode("utf-8")
+        f"{title}\n{snippet}\n{url}\n{cat_id or ''}".encode("utf-8")
     ).hexdigest()
 
     raw = {
@@ -52,8 +58,11 @@ def profile_to_raw_hit(
         "quality_score": gate["score"],
         "quality_reasons": gate["reasons"],
         "contact_ok": gate["contact_ok"],
+        "categoria_id": cat_id,
+        "categoria_label": gate.get("categoria_label"),
+        "matched_keywords": gate.get("matched_keywords") or [],
+        "product": PRODUCT_NAME,
     }
-    # Only pass through real socials if present — never fabricate.
     if isinstance(p.get("socials"), dict) and p["socials"]:
         raw["socials"] = p["socials"]
 
@@ -62,8 +71,8 @@ def profile_to_raw_hit(
         title=str(title),
         url=url,
         snippet=snippet,
-        signal_type="public_profile",
-        category="consumer",
+        signal_type="public_complaint" if cat_id else "public_profile",
+        category=str(cat_id) if cat_id else "consumer",
         source=platform,
         raw=raw,
         provenance=Provenance(
@@ -73,11 +82,13 @@ def profile_to_raw_hit(
             content_hash=content_hash,
             source_kind="public",
             extras={
-                "collected_via": "scout_kiryano",
+                "collected_via": "prospeccao_tiago_a_rocha",
+                "product": PRODUCT_NAME,
                 "upstream": "kiryano/Scout",
                 "license": "MIT",
                 "quality_status": gate["status"],
                 "quality_score": gate["score"],
+                "categoria_id": cat_id,
             },
         ),
     )
@@ -94,6 +105,10 @@ def profiles_to_raw_hits(
     for profile in profiles:
         hit = profile_to_raw_hit(profile, include_rejected=include_rejected)
         if hit is None or not hit.url or hit.url in seen:
+            continue
+        # Never persist B2B/privacy as accepted pipeline material.
+        status = (hit.raw or {}).get("quality_status")
+        if status in ("rejected_b2b", "rejected_privacy"):
             continue
         seen.add(hit.url)
         out.append(hit)

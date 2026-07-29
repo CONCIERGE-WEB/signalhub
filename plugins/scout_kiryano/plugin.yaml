@@ -1,10 +1,10 @@
-# SignalHub plugin — Source Provider (terceiros MIT: kiryano/Scout)
+# SignalHub plugin — Prospecção | Tiago A. Rocha (kiryano/Scout MIT)
 name: scout_kiryano
-version: 0.1.0
-author: "SignalHub (Source Provider: kiryano/Scout MIT)"
+version: 0.2.0
+author: "Prospecção | Tiago A. Rocha"
 description: >
-  Source Provider adaptado do kiryano/Scout (MIT): scrapers públicos
-  (GitHub, YouTube, Linktree). Emite RawHit/Signal; não inventa contato.
+  Prospecção | Tiago A. Rocha — Source Provider (kiryano/Scout MIT) com
+  9 categorias B2C oficiais, anti-B2B e trava de privacidade família.
   Atribuição: third_party/kiryano_scout/. Não altera o Core.
 signalhub_version: ">=0.3.0"
 contract_version: "1.0.0"
